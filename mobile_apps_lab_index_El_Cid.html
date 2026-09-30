@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobile Apps Lab</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px}
+h1{text-align:center}
+#apps{max-width:500px;margin:auto}
+button{width:100%;padding:16px;margin:6px 0;font-size:17px;border:0;border-radius:10px;background:#176b3a;color:white}
+</style>
+</head>
+<body>
+<h1>Mobile Apps Lab</h1>
+<div id="apps">Loading...</div>
+
+<script>
+const owner = "mobileappslab";
+const hiddenRepo = "Launcher";
+
+fetch(`https://api.github.com/users/${owner}/repos?per_page=100`)
+  .then(r => r.json())
+  .then(repos => {
+    const apps = document.getElementById("apps");
+    apps.innerHTML = "";
+
+    repos
+      .filter(repo => repo.name !== hiddenRepo && repo.name.includes("El_Cid"))
+      .forEach(repo => {
+        const button = document.createElement("button");
+        button.textContent = repo.name;
+
+        button.onclick = () => {
+          window.open(
+            `https://${owner}.github.io/${repo.name}/`,
+            "_blank"
+          );
+        };
+
+        apps.appendChild(button);
+      });
+  })
+  .catch(() => {
+    document.getElementById("apps").textContent =
+      "Unable to load repositories.";
+  });
+</script>
+</body>
+</html>
